@@ -1,0 +1,22 @@
+{
+  "name": "fp-library",
+  "version": "0.0.1",
+  "description": "A JavaScript functional programming library for personal use.",
+  "main": "fp-library.js",
+  "scripts": {
+    "test": "test"
+  },
+  "keywords": [
+    "javascript",
+    "functional",
+    "programming",
+    "fp",
+    "functional",
+    "library",
+    "monad",
+    "functor",
+    "composition"
+  ],
+  "author": "Austin Davis",
+  "license": "ISC"
+}
