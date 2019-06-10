@@ -4,14 +4,14 @@ export class IO extends Monad {
   constructor() {
     this.fn = fn;
   }
-  run() {
+  join() {
     return this.fn();
   }
   map(fn) {
-    return new this(() => fn(this.run()));
+    return new this(() => fn(this.join()));
   }
-  bind(monad) {
-    return new monad(() => fn(this.run()).run());
+  flatmap(fn) {
+    return new this(() => fn(this.join()).join());
   }
   lift(value) {
     return new this(() => value);
