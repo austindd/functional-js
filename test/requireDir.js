@@ -1,8 +1,6 @@
 const fs = require("fs");
 const path = require("path");
 
-console.log("Running 'requireDir.js'");
-
 function walkDir(_dir) {
   let files = fs.readdirSync(_dir);
   files = files.map(file => {
@@ -11,14 +9,12 @@ function walkDir(_dir) {
     if (stats.isDirectory()) return walkDir(filePath)
     else if (stats.isFile()) return filePath;
   });
-  console.dir(files);
+
   /* Concatenate all the nested arrays into a single flat array of filenames. */
   return files.reduce((all, folderContents) => all.concat(folderContents), []);
 }
 
-function requireDir(dir, testFileName = /\.js/, exclude, callback) {
-
-  let args = Array.prototype.slice.apply(arguments);
+function requireDir(dir, testFileName = ".js", exclude, callback) {
 
   const allFilePaths = walkDir(dir); /* should be a flat array of file paths, not directories */
   const allExports = {};

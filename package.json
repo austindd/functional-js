@@ -4,7 +4,7 @@
   "description": "A JavaScript functional programming library for personal use.",
   "main": "fp-library.js",
   "scripts": {
-    "test": "test"
+    "test": "node ./test/test-world.js"
   },
   "keywords": [
     "javascript",
