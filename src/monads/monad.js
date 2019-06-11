@@ -1,5 +1,6 @@
-export class Monad {
-  constructor() {
+
+class Monad {
+  constructor(fn) {
     this.fn = fn;
   }
   join() {
@@ -9,7 +10,9 @@ export class Monad {
     return new this(() => value);
   }
   map(fn) {
-    return new this(() => fn(this.join()));
+    console.log(this);
+    const self = this.constructor;
+    return new self(() => fn(this.join()));
   }
   mapWhen(predicate, fn) {
     const _this = this;
@@ -145,9 +148,14 @@ export class Monad {
   }
 }
 
-export default Monad;
+Monad.lift = (value) => {
+  return new Monad(() => value);
+}
+;
 
-
+module.exports = {
+  Monad: Monad
+};
 
 
 
