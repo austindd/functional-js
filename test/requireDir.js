@@ -23,7 +23,7 @@ function requireDir(dir, testFileName = ".js", exclude, callback) {
 
     /* Guard against excluded string patterns in file path */
     if (exclude && typeof exclude === "object" && Array.isArray(exlude)) {
-      for (let i = 0; i < exclude.length; ++i) {
+      for (let i = 0; i < exclude.length - 1; ++i) {
         if (filePath.search(exclude) !== -1) {
           return;
         }
