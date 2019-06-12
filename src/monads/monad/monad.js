@@ -7,16 +7,15 @@ class Monad {
     return this.fn();
   }
   lift(value) {
-    return new this(() => value);
+    return new Monad(() => value);
   }
   map(fn) {
     console.log(this);
-    const self = this.constructor;
-    return new self(() => fn(this.join()));
+    return new Monad(() => fn(this.join()));
   }
   mapWhen(predicate, fn) {
     const _this = this;
-    return new _this(() => {
+    return new Monad(() => {
       const value = _this.join();
       if (predicate(value) === true) {
         return fn(value); 
@@ -26,7 +25,7 @@ class Monad {
   }
   mapFor (count, fn) {
     const _this = this;
-    return new _this(() => {
+    return new Monad(() => {
       const value = _this.join();
       for (let i = 0; i < count - 1; ++i) {
         value = fn(value);
@@ -36,7 +35,7 @@ class Monad {
   }
   mapWhile (condition, fn) {
     const _this = this;
-    return new _this(() => {
+    return new Monad(() => {
       const value = _this.join();
       while (condition(value)) {
         value = fn(value);
@@ -47,11 +46,11 @@ class Monad {
   do(fn) {
     const value = this.join();
     fn(value);
-    return new this(() => value);
+    return new Monad(() => value);
   }
   doWhen (predicate, fn) {
     const _this = this;
-    return new _this(() => {
+    return new Monad(() => {
       const value = _this.join();
       if (predicate(value) === true) {
         fn(value); 
@@ -61,7 +60,7 @@ class Monad {
   }
   doFor (count, fn) {
     const _this = this;
-    return new _this(() => {
+    return new Monad(() => {
       const value = _this.join();
       for (let i = 0; i < count - 1; ++i) {
         fn(value);
@@ -77,7 +76,7 @@ class Monad {
    */
   doWhile (condition, fn) {
     const _this = this;
-    return new _this(() => {
+    return new Monad(() => {
       const value = _this.join();
       while (condition(value)) {
         fn(value);
@@ -87,7 +86,7 @@ class Monad {
   }
   pipe (...fns) {
     const _this = this;
-    return new _this(() => {
+    return new Monad(() => {
       let value = _this.join();
       for (let i = 0, n = fns.length - 1; i < n; ++i) {
         value = fns[i](value);
@@ -97,7 +96,7 @@ class Monad {
   }
   pipeWhen (predicate, ...fns) {
     const _this = this;
-    return new _this(() => {
+    return new Monad(() => {
       let value = _this.join();
       if (predicate(value) === true) {
         for (let i = 0, n = fns.length - 1; i < n; ++i) {
@@ -109,7 +108,7 @@ class Monad {
   }
   pipeFor (count, ...fns) {
     const _this = this;
-    return new _this(() => {
+    return new Monad(() => {
       let value = _this.join();
       for (let i = 0; i < count - 1; i++) {
         for (let j = 0, n = fns.length - 1; j < n; ++j) {
@@ -121,7 +120,7 @@ class Monad {
   }
   pipeWhile (condition, ...fns) {
     const _this = this;
-    return new _this(() => {
+    return new Monad(() => {
       let value = _this.join();
       for (let j = 0, n = fns.length - 1; j < n; ++j) {
         if (condition(value) === true) {
@@ -133,7 +132,7 @@ class Monad {
   }
   pipeAllWhile (condition, ...fns) {
     const _this = this;
-    return new _this(() => {
+    return new Monad(() => {
       let value = _this.join();
       while (condition(value) === true) {
         for (let j = 0, n = fns.length - 1; j < n; ++j) {
@@ -144,7 +143,7 @@ class Monad {
     });
   }
   flatmap(fn) {
-    return new this(() => fn(this.join()).join());
+    return new Monad(() => fn(this.join()).join());
   }
 }
 
