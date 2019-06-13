@@ -2,7 +2,7 @@ const path = require('path');
 const { requireDir } = require("./require-dir");
 
 const lib = requireDir(path.join(__dirname, "./lib"), ".js");
-console.log("\r\nImporting Test Utility Library: \r\n", lib);
+console.log("\r\nImporting Test Utilities: \r\n", lib);
 
 const rawTestModules = requireDir(path.join(__dirname, "../src"), ".test.js");
 console.log("\r\nImporting Test Modules: \r\n", rawTestModules);
@@ -37,8 +37,10 @@ const testModules = Object.keys(rawTestModules).map((name, fn) => {
       testResult.moduleName = moduleObj.moduleName;
 
       if (testResult.result === true) {
+        testResult.result = "PASS"
         passed.push(testResult);
       } else if (testResult.result === false) {
+        testResult.result = "FAIL"
         failed.push(testResult);
       } else {
         errors.push(testResult);

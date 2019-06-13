@@ -39,7 +39,6 @@ function testMonad() {
 
     function mapFor1() {
       const test = Monad.lift(0)
-        .trace()
         .mapFor(3, (x) => {
           return x + 5
         }).join()
@@ -103,17 +102,18 @@ function testMonad() {
 
     function doFor1() {
       let test = 0;
-      try {
-      
       const m = Monad.lift(5)
         .doFor(10, x => { test = test + x; })
         .join()
-        console.dir(m);
-      } catch (err) {
-        console.log(err);
-      }
-
       return (test === 50);
+      },
+
+    function doWhile1() {
+      let test = 0;
+      const m = Monad.lift(10)
+        .doWhile(() => (test < 100 === true), (x) => { test = test + x })
+        .join()
+      return (test === 100);
     }
     
   ];
