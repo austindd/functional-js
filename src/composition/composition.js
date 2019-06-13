@@ -8,12 +8,23 @@ function enableTuples(fn) {
     
   };
 }
+function curry(f) {
+return function curried(...args) {
+let ctx = this;
+if (args.length >= f.length) {
+return f.call(ctx, ...args);
+}
+return function(...args2) {
+return curried.call(ctx, ...args, ...args2);
+}
+}
+}
 
 // Warning: Do not use 'curry' with default parameters!!
 // Function.prototype.length will not count any parameters
 // that come after a default parameter!
 
-function curry(fn) {
+function _curry(fn) {
   return function curried(...args) {
     if (args.length >= fn.length) { // (1)
       return fn.apply(this, args);
