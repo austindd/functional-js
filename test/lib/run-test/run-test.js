@@ -19,9 +19,10 @@ function runTest(testFunction, options = {name: null, testID: null}) {
     try {
       output.result = testFunction();
     }
-    catch {
+    catch (err) {
       output.result = "ERROR IN TEST"
       console.error("Error: invalid test at: '" + output.name + "'");
+      console.error(err);
     }
     return output;
   } 

@@ -11,7 +11,12 @@ const testModules = Object.keys(rawTestModules).map((name, fn) => {
   const testMod = rawTestModules[name];
   let testArray;
   if (typeof testMod === "function") {
-    testArray = testMod();
+    try {
+      testArray = testMod();
+    } catch (err) {
+      console.warn(error);
+      testArray = [ function module_error_no_op() {} ]
+    }
   } else if (typeof testMod === "object" && Array.isArray(testMod)) {
     testArray = testMod;
   } else throw new TypeError("Test module exports must be an array or a function returning an array.");
@@ -32,13 +37,10 @@ const testModules = Object.keys(rawTestModules).map((name, fn) => {
       testResult.moduleName = moduleObj.moduleName;
 
       if (testResult.result === true) {
-        console.log("passed")
         passed.push(testResult);
       } else if (testResult.result === false) {
-        console.log("passed")
         failed.push(testResult);
       } else {
-        console.log("error")
         errors.push(testResult);
       }
 
@@ -48,23 +50,28 @@ const testModules = Object.keys(rawTestModules).map((name, fn) => {
 
     return accumulator.concat(moduleResults);
 
-  }, []);
+  }, [])
   
-  console.dir(finalResults);
-
   const globalResults = {
-    testsPassed: passed.length,
-    testsFailed: failed.length,
-    errors: errors.length,
+    "Tests Passed": passed.length,
+    "Tests Failed": failed.length,
+    "Errors": errors.length,
   }
 
+  console.table(finalResults.map((test) => {
+    return {
+      "Module": test.moduleName,
+      "Test Function": test.name,
+      "Result": test.result
+    };
+  }));
   console.table(globalResults);
   return finalResults;
 
 })(testModules);
 
 function objectToArray(obj) {
-  Object.keys(obj).map((key) => {
+  return Object.keys(obj).map((key) => {
     return obj[key];
   });
 }

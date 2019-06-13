@@ -4,14 +4,15 @@ class Monad {
     this.fn = fn;
   }
   join() {
-    return this.fn();
+    const that = this;
+    return that.fn();
   }
   lift(value) {
     return new Monad(() => value);
   }
   map(fn) {
-    console.log(this);
-    return new Monad(() => fn(this.join()));
+    const that = this;
+    return new Monad(() => fn(that.join()));
   }
   mapWhen(predicate, fn) {
     const that = this;
@@ -26,8 +27,8 @@ class Monad {
   mapFor (count, fn) {
     const that = this;
     return new Monad(() => {
-      const value = that.join();
-      for (let i = 0; i < count - 1; ++i) {
+      let value = that.join();
+      for (let i = 0; i < count; ++i) {
         value = fn(value);
       }
       return value;
@@ -36,17 +37,12 @@ class Monad {
   mapWhile (condition, fn) {
     const that = this;
     return new Monad(() => {
-      const value = that.join();
-      while (condition(value)) {
+      let value = that.join();
+      while (condition(value) === true) {
         value = fn(value);
       }
       return value;
     });
-  }
-  do(fn) {
-    const value = this.join();
-    fn(value);
-    return new Monad(() => value);
   }
   doWhen (predicate, fn) {
     const that = this;
@@ -62,7 +58,7 @@ class Monad {
     const that = this;
     return new Monad(() => {
       const value = that.join();
-      for (let i = 0; i < count - 1; ++i) {
+      for (let i = 0; i < count; ++i) {
         fn(value);
       }
       return value;
@@ -70,7 +66,7 @@ class Monad {
   }
   /*  doWhile:: c f => Monad
    *  passes the wrapped value to condition function for while loop
-   *  The value will not mutate, so the condition function or 'do' function
+   *  The value will not mutate, so either the condition function or 'do' function
    *  must involve a side effect to produce a halting condition.
    *  Prone to infinite loops. Use with caution.
    */
@@ -88,7 +84,7 @@ class Monad {
     const that = this;
     return new Monad(() => {
       let value = that.join();
-      for (let i = 0, n = fns.length - 1; i < n; ++i) {
+      for (let i = 0, n = fns.length; i < n; ++i) {
         value = fns[i](value);
       }
       return value;
@@ -99,7 +95,7 @@ class Monad {
     return new Monad(() => {
       let value = that.join();
       if (predicate(value) === true) {
-        for (let i = 0, n = fns.length - 1; i < n; ++i) {
+        for (let i = 0, n = fns.length; i < n; ++i) {
           value = fns[i](value);
         }
       }
@@ -110,8 +106,8 @@ class Monad {
     const that = this;
     return new Monad(() => {
       let value = that.join();
-      for (let i = 0; i < count - 1; i++) {
-        for (let j = 0, n = fns.length - 1; j < n; ++j) {
+      for (let i = 0; i < count; i++) {
+        for (let j = 0, n = fns.length; j < n; ++j) {
           value = fns[j](value);
         }
       }
@@ -122,7 +118,7 @@ class Monad {
     const that = this;
     return new Monad(() => {
       let value = that.join();
-      for (let j = 0, n = fns.length - 1; j < n; ++j) {
+      for (let j = 0, n = fns.length; j < n; ++j) {
         if (condition(value) === true) {
           value = fns[j](value);
         }
@@ -130,20 +126,21 @@ class Monad {
       return value;
     });
   }
-  pipeAllWhile (condition, ...fns) {
+  whilePipe (condition, ...fns) {
     const that = this;
     return new Monad(() => {
       let value = that.join();
       while (condition(value) === true) {
-        for (let j = 0, n = fns.length - 1; j < n; ++j) {
+        for (let j = 0, n = fns.length; j < n; ++j) {
           value = fns[j](value);
         }
       }
       return value;
     });
   }
-  flatmap(fn) {
-    return new Monad(() => fn(this.join()).join());
+  bind(monad) {
+    const that = this;
+    return new monad(() => that.join());
   }
   trace() {
     const that = this;
