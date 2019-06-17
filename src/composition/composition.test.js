@@ -3,7 +3,7 @@ const C = require("./composition");
 function testComposition() {
   const tests = [
 
-    function curry1() {
+    function curry_001() {
       const testArr = [];
       const func1 = C.curry(function(a, b, c) {
         return a + (b * c);
@@ -31,7 +31,7 @@ function testComposition() {
 
     // Testing whether the 'curry' function works for prototype
     // methods on classes.
-    function curry2() { 
+    function curry_002() { 
       class Klass {
         constructor(val) {
           this.val = val;
@@ -57,7 +57,7 @@ function testComposition() {
     },
 
     // Does context work properly within class methods?
-    function curry3() {
+    function curry_003() {
       class Klass {
         constructor(val) {
           this.val = val;
@@ -84,7 +84,7 @@ function testComposition() {
     },
     
     // Can curried functions still be fully applied with tuples?
-    function curry4() {
+    function curry_004() {
       const _add = (a, b) => a + b;
       const _concat3 = (str1, str2, str3) => "" + str1 + str2 + str3;
 
@@ -108,9 +108,20 @@ function testComposition() {
         concat3()(1, 2, 3) === "123" 
       ];
 
-      console.dir(add(1,2));
-      console.dir(concat3(1, 2, 3));
-      console.dir(test.map((item, i) => [i, item]));
+      return allTrue(test);
+    },
+
+    function compose_001() {
+      const add = a => b => a + b;
+      const multiply = a => b => a * b;
+      const test = [
+        typeof C.compose(add(1), multiply(3)) === "function",
+        C.compose(add(1), multiply(3))(0) === 1,
+        C.compose(add(1), multiply(3))(2) === 7,
+        C.compose(add(5), multiply(2))(6) === 17,
+        C.compose(add(5), add(4), multiply(2), add(-2))(0) === 5
+      ];
+
       return allTrue(test);
     }
 

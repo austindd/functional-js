@@ -28,6 +28,16 @@ function curry(f) {
   }
 }
 
+function compose(...fns) {
+  return (...args) => {
+    const length = fns.length;
+    let x = fns[length - 1](...args);
+    for (let i = length - 2, n = 0; i >= n; i--) {
+      x = fns[i](x);
+    }
+    return x;
+  }
+}
 
 function pipe(...fns) {
   return (...args) => {
@@ -47,6 +57,7 @@ function trace (x) {
 module.exports = {
   enableTuples: enableTuples,
   curry: curry,
+  compose: compose,
   pipe: pipe,
   trace: trace,
 }
