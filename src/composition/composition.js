@@ -49,15 +49,14 @@ function pipe(...fns) {
   }
 }
 
-function trace (x) {
-  console.log(x);
-  return x;
-};
+
+
 
 module.exports = {
   enableTuples: enableTuples,
   curry: curry,
   compose: compose,
   pipe: pipe,
-  trace: trace,
 }
+
+

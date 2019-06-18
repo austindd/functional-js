@@ -1,5 +1,3 @@
-const exports = module.exports;
-
 function getTypeof(x) {
   	if (typeof x === "boolean") {
   		return "boolean";
@@ -33,7 +31,6 @@ function getTypeof(x) {
   		}
   	}
   }
-exports.getTypeof = getTypeof;
 
 function typeMatch(types = [] || "", item) {
   let itemType = typeof item;
@@ -55,11 +52,69 @@ function typeMatch(types = [] || "", item) {
     return types === itemType;
   } else return new TypeError("Invalid argument type for 'types'");
 }
-exports.typeMatch = typeMatch;
-
 
 function objectToArray(obj) {
   Object.keys(obj).map((key) => {
     return obj[key];
   });
 }
+
+function arrayToObject(arr, keys /*: array ["foo", "bar"] || object: { 0: "foo", 1: "bar" } */) {
+  if (keys) {
+    if (typeof keys !== "object") { /* guard type errors for 'keys' param */
+      throw new TypeError("Parameter 'keys' must be of type 'object' or 'array'");
+    }
+    else {
+      /* 'keys' param should be a map from index # to string value,
+       * so this algorithm can work with both objects and arrays. */
+      return arr.reduce((obj, item, index) => {
+        obj[keys[index]] = item;
+        return obj;
+      }, {});
+    }
+  } else {
+    return arr.reduce((obj, item, index) => {
+      obj[index] = item;
+      return obj;
+    }, {});
+  }
+}
+
+function consoleLog(x) {
+  console.log(x);
+  return x;
+};
+
+function consoleDir(x) {
+  console.dir(x);
+  return x;
+}
+
+function consoleTable(x) {
+  console.table(x);
+  return x;
+}
+
+function consoleWarn(x) {
+  console.warn(x);
+  return x;
+}
+
+function consoleError(x) {
+  console.error(x);
+  return x;
+}
+
+
+module.exports = {
+  getTypeof: getTypeof,
+  typeMatch: typeMatch, 
+  objectToArray: objectToArray,
+  arrayToObject: arrayToObject,
+  consoleLog: consoleLog,
+  consoleDir: consoleDir,
+  consoleTable: consoleTable,
+  consoleWarn: consoleWarn,
+  consoleError: consoleError
+}
+
